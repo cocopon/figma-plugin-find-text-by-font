@@ -63,7 +63,7 @@ figma.ui.onmessage = (msg) => {
 	if (msg.type === 'load') {
 		updateFontFamilies();
 	}
-  if (msg.type === 'select-nodes-by-font-family') {
+	if (msg.type === 'select-nodes-by-font-family') {
 		selectNodesByFontFamily(msg.payload.fontFamily);
-  }
+	}
 };
