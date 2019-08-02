@@ -1,6 +1,8 @@
 # Find Text by Font
 [Figma][] plugin for finding text by font.
 
+![Screenshot](https://user-images.githubusercontent.com/602961/62367909-ec29d680-b565-11e9-9609-91896f637dbf.png)
+
 
 ## Development
 Using Typescript requires a compiler to convert Typescript (code.ts) into Javascript (code.js)
