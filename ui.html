@@ -1,0 +1,104 @@
+<style>
+:root {
+	--color-foreground: #333;
+	--color-hovered-control-border: rgba(0, 0, 0, 0.1);
+	--color-focused-control-border: #18a0fb;
+	--control-height: 30px;
+}
+body {
+	color: var(--color-foreground);
+	font-family: Inter, Roboto, sans-serif;
+	font-size: 11px;
+}
+svg path {
+	fill: inherit;
+}
+.selectField {
+	position: relative;
+}
+.selectField_select {
+	-webkit-appearance: none;
+	border-color: transparent;
+	border-radius: 2px;
+	border-style: solid;
+	border-width: 1px;
+	background-color: transparent;
+	color: var(--color-text);
+	display: block;
+	height: var(--control-height);
+	padding: 0 24px 0 8px;
+	width: 100%;
+}
+.selectField_select:hover {
+	border-color: var(--color-hovered-control-border);
+}
+.selectField_select:focus {
+	border-color: var(--color-focused-control-border);
+	outline: var(--color-focused-control-border) solid 1px;
+	outline-offset: -2px;
+}
+.selectField_chevron {
+	align-items: center;
+	bottom: 0;
+	color: var(--color-foreground);
+	display: flex;
+	fill: var(--color-foreground);
+	justify-content: space-around;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 24px;
+}
+</style>
+<div class="selectField">
+	<select id="fontFamiliesSelect" class="selectField_select"></select>
+	<div class="selectField_chevron">
+		<svg class="svg" width="8" height="7" viewBox="0 0 8 7" xmlns="http://www.w3.org/2000/svg"><path d="M3.646 5.354l-3-3 .708-.708L4 4.293l2.646-2.647.708.708-3 3L4 5.707l-.354-.353z" fill-rule="evenodd" fill-opacity="1" fill="#fff" stroke="none"></path></svg>
+	</div>
+</div>
+<script>
+
+function findFontFamilySelect() {
+	return document.getElementById('fontFamiliesSelect');
+}
+
+parent.postMessage({
+	pluginMessage: {
+		type: 'load',
+	},
+}, '*');
+
+onmessage = (ev) => {
+	const msg = ev.data.pluginMessage;
+
+	if (msg.type === 'update-font-families') {
+		const selectElem = findFontFamilySelect();
+		while (selectElem.hasChildNodes()) {
+			selectElem.removeChild(selectElem.children.item(0));
+		}
+
+		const optElems = msg.payload.entries.map((entry) => {
+			const elem = document.createElement('option');
+			elem.textContent = entry.displayText;
+			elem.value = entry.fontFamily;
+			return elem;
+		});
+		optElems.forEach((optElem) => {
+			selectElem.appendChild(optElem);
+		});
+	}
+};
+
+findFontFamilySelect().addEventListener('change', (ev) => {
+	const fontFamily = ev.currentTarget.value;
+	parent.postMessage({
+		pluginMessage: {
+			payload: {
+				fontFamily: fontFamily,
+			},
+			type: 'select-nodes-by-font-family',
+		},
+	}, '*');
+});
+
+</script>
